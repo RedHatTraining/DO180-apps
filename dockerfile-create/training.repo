@@ -1,0 +1,5 @@
+[rhel_dvd]
+baseurl = http://content.example.com/rhel7.6/x86_64/dvd
+enabled = true
+gpgcheck = false
+name = Remote classroom copy of dvd
