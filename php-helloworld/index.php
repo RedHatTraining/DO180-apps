@@ -1,3 +1,3 @@
 <?php
-print "Hello, LLC! DO180  LLC btm EX180 susan joseph EX180 " . PHP_VERSION . "\n";
+print "Hello,  susan joseph EX180 DO180 " . PHP_VERSION . "\n";
 ?>
