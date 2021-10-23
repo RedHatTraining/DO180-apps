@@ -4,7 +4,7 @@
       <meta charset="utf-8">
 </head>
 <body>
-      <form name="form1" align="center" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+      <form name="form1" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 
 <table>
 <tr>
