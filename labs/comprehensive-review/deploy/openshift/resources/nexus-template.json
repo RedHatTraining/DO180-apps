@@ -1,0 +1,169 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "nexus-persistent",
+    "annotations": {
+      "openshift.io/display-name": "Nexus (Persistent)",
+      "description": "This template creates a Nexus instance backed by a persistent data store.",
+      "tags": "servers,nexus",
+      "template.openshift.io/long-description": "This template creates a Nexus instance backed by a persistent data store. The data store contains the Nexus repositories which contain library modules.",
+      "template.openshift.io/provider-display-name": "Red Hat Training"
+    }
+  },
+  "labels": {
+    "template": "nexus-persistent-template",
+    "app": "nexus"
+  },
+  "objects": [
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "nexus"
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "nexus",
+            "port": 8081
+          }
+        ],
+        "selector": {
+          "name": "nexus"
+        }
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "nexus"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "${VOLUME_CAPACITY}"
+          }
+        }
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "nexus"
+      },
+      "spec": {
+        "strategy": {
+          "type": "Recreate"
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "nexus"
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "name": "nexus"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "nexus",
+                "image": "quay.io/${RHT_OCP4_QUAY_USER}/nexus:${NEXUS_VERSION}",
+                "ports": [
+                  {
+                    "containerPort": 8081
+                  }
+                ],
+                "readinessProbe": {
+                  "timeoutSeconds": 1,
+                  "initialDelaySeconds": 5,
+                  "exec": {
+                    "command": [ "/bin/sh", "-i", "-c",
+                      "curl 127.0.0.1:8081"]
+                  }
+                },
+                "livenessProbe": {
+                  "timeoutSeconds": 1,
+                  "initialDelaySeconds": 30,
+                  "failureThreshold": 10,
+                  "tcpSocket": {
+                    "port": 8081
+                  }
+                },
+                "env": [
+                ],
+                "resources": {
+                  "limits": {
+                    "memory": "${MEMORY_LIMIT}"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "nexus-data",
+                    "mountPath": "/opt/nexus/sonatype-work"
+                  }
+                ],
+                "imagePullPolicy": "Always"
+              }
+            ],
+            "volumes": [
+              {
+                "name": "nexus-data",
+                "persistentVolumeClaim": {
+                  "claimName": "nexus"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "MEMORY_LIMIT",
+      "displayName": "Memory Limit",
+      "description": "Maximum amount of memory the container can use.",
+      "value": "512Mi",
+      "required": true
+    },
+    {
+      "name": "NAMESPACE",
+      "displayName": "Namespace",
+      "description": "The OpenShift Namespace where the ImageStream resides.",
+      "value": "openshift"
+    },
+    {
+      "name": "VOLUME_CAPACITY",
+      "displayName": "Volume Capacity",
+      "description": "Volume space available for data, e.g. 512Mi, 2Gi.",
+      "value": "1Gi",
+      "required": true
+    },
+    {
+      "name": "NEXUS_VERSION",
+      "displayName": "Version of Nexus Image",
+      "description": "Version of Nexus image to be used (must be 2.x).",
+      "value": "latest",
+      "required": true
+    },
+    {
+      "name": "RHT_OCP4_QUAY_USER",
+      "displayName": "Quay.io namespace",
+      "description": "Namespace where the Nexus image is stored in Quay.io",
+      "required": true
+    }
+  ]
+}

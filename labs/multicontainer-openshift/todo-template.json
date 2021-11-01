@@ -1,0 +1,207 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "todonodejs-persistent",
+    "annotations": {
+      "openshift.io/display-name": "TODO Application NodeJS 4.0 and MySQL 5.7"
+    }
+  },
+  "message": "",
+  "labels": {
+    "template": "todonodejs-mysql-persistent-template",
+    "app": "todonodejs"
+  },
+  "objects": [
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "name": "mysql",
+        "labels": {
+          "name": "mysql"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "image": "quay.io/${RHT_OCP4_QUAY_USER}/do180-mysql-57-rhel7",
+            "name": "mysql",
+            "env": [
+              {
+                "name": "MYSQL_ROOT_PASSWORD",
+                "value": "r00tpa55"
+              },
+              {
+                "name": "MYSQL_USER",
+                "value": "user1"
+              },
+              {
+                "name": "MYSQL_PASSWORD",
+                "value": "mypa55"
+              },
+              {
+                "name": "MYSQL_DATABASE",
+                "value": "items"
+              }
+            ],
+            "ports": [
+              {
+                "containerPort": 3306,
+                "name": "mysql"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "mountPath": "/var/lib/mysql/data",
+                "name": "db-volume"
+              },
+              {
+                "mountPath": "/var/lib/mysql/init",
+                "name": "db-init"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "db-volume",
+            "persistentVolumeClaim": {
+              "claimName": "dbclaim"
+            }
+          },
+          {
+            "name": "db-init",
+            "persistentVolumeClaim": {
+              "claimName": "dbinit"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "name": "todoapi",
+        "labels": {
+          "name": "todoapi"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "resources": {
+              "limits" : {
+                "cpu": "0.5"
+              }
+            },
+            "image": "quay.io/${RHT_OCP4_QUAY_USER}/do180-todonodejs",
+            "name": "todoapi",
+            "ports": [
+              {
+                "containerPort": 30080,
+                "name": "nodejs-http"
+              }
+            ],
+            "env": [
+              {
+                "name": "MYSQL_ENV_MYSQL_DATABASE",
+                "value": "items"
+              },
+              {
+                "name": "MYSQL_ENV_MYSQL_USER",
+                "value": "user1"
+              },
+              {
+                "name": "MYSQL_ENV_MYSQL_PASSWORD",
+                "value": "mypa55"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "labels": {
+          "name": "todoapi"
+        },
+        "name": "todoapi"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 30080
+          }
+        ],
+        "selector": {
+          "name": "todoapi"
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "labels": {
+          "name": "mysql"
+        },
+        "name": "mysql"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 3306
+          }
+        ],
+        "selector": {
+          "name": "mysql"
+        }
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "dbinit"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "1Mi"
+          }
+        }
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "dbclaim"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "10Mi"
+          }
+        }
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "description": "Quay namespace the images are stored in",
+      "name": "RHT_OCP4_QUAY_USER",
+      "required": true
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+groupadd -r nexus -f -g 1001
+useradd -u 1001 -r -g nexus -m -d ${NEXUS_HOME} \
+        -s /sbin/nologin \
+        -c "Nexus User" nexus

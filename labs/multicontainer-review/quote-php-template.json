@@ -1,0 +1,207 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "quote-php-persistent",
+    "annotations": {
+      "openshift.io/display-name": "Quote PHP Application and MySQL 5.7"
+    }
+  },
+  "message": "",
+  "labels": {
+    "template": "quote-php-mysql-persistent-template",
+    "app": "quote-php"
+  },
+  "objects": [
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "name": "mysql",
+        "labels": {
+          "name": "mysql"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "image": "quay.io/${RHT_OCP4_QUAY_USER}/do180-mysql-57-rhel7",
+            "name": "mysql",
+            "env": [
+              {
+                "name": "MYSQL_ROOT_PASSWORD",
+                "value": "r00tpa55"
+              },
+              {
+                "name": "MYSQL_USER",
+                "value": "user1"
+              },
+              {
+                "name": "MYSQL_PASSWORD",
+                "value": "mypa55"
+              },
+              {
+                "name": "MYSQL_DATABASE",
+                "value": "quotes"
+              }
+            ],
+            "ports": [
+              {
+                "containerPort": 3306,
+                "name": "mysql"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "mountPath": "/var/lib/mysql/data",
+                "name": "db-volume"
+              },
+              {
+                "mountPath": "/var/lib/mysql/init",
+                "name": "db-init"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "db-volume",
+            "persistentVolumeClaim": {
+              "claimName": "dbclaim"
+            }
+          },
+          {
+            "name": "db-init",
+            "persistentVolumeClaim": {
+              "claimName": "dbinit"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "name": "quote-php",
+        "labels": {
+          "name": "quote-php"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "resources": {
+              "limits" : {
+                "cpu": "0.5"
+              }
+            },
+            "image": "quay.io/${RHT_OCP4_QUAY_USER}/do180-quote-php",
+            "name": "quote-php",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "name": "php-http"
+              }
+            ],
+            "env": [
+              {
+                "name": "MYSQL_ENV_MYSQL_DATABASE",
+                "value": "items"
+              },
+              {
+                "name": "MYSQL_ENV_MYSQL_USER",
+                "value": "user1"
+              },
+              {
+                "name": "MYSQL_ENV_MYSQL_PASSWORD",
+                "value": "mypa55"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "labels": {
+          "name": "quote-php"
+        },
+        "name": "quote-php"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 8080
+          }
+        ],
+        "selector": {
+          "name": "quote-php"
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "labels": {
+          "name": "mysql"
+        },
+        "name": "mysql"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 3306
+          }
+        ],
+        "selector": {
+          "name": "mysql"
+        }
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "dbinit"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "1Mi"
+          }
+        }
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "dbclaim"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "10Mi"
+          }
+        }
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "description": "Quay namespace the images are stored in",
+      "name": "RHT_OCP4_QUAY_USER",
+      "required": true
+    }
+  ]
+}

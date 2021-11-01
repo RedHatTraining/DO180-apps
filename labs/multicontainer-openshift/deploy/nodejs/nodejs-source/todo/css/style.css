@@ -1,0 +1,80 @@
+body {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+h3 {
+    margin: 0 0 20px;
+    text-align: left;
+}
+
+.message {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.grid {
+    width: 40%;
+    float: left;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.grid .remove {
+    width: 20px;
+    height: 20px;
+    margin-top: 8px;
+    color: #a94442;
+}
+
+.gridStyle {
+    border: 1px solid rgb(212, 212, 212);
+    height: 335px;
+}
+
+.form {
+    width: 40%;
+    float: right;
+    margin-left: 5%;
+    margin-right: 5%;
+    text-align: left;
+}
+
+.form label {
+    width: 100px;
+}
+
+.form input {
+    width: 300px;
+    float: right;
+}
+
+.form .form-group span {
+    float: right;
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+    margin-left: 5px;
+    color: #5cb85c;
+}
+
+.form .form-group p {
+    margin-top: 15px;
+    margin-left: 200px;
+    color: #a94442;
+}
+
+.form .avatar {
+    height: 250px;
+    float: right;
+    margin-right: 25px;
+}
+
+.form .buttons {
+    clear: both;
+    float: right;
+    margin-top: 10px;
+    margin-right: 25px;
+}

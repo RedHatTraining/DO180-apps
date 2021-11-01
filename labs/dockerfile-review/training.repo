@@ -1,0 +1,23 @@
+[rhel_dvd]
+baseurl = http://content.example.com/rhel7.6/x86_64/dvd
+enabled = true
+gpgcheck = false
+name = Remote classroom copy of dvd
+
+[rhel-7-server-optional-rpms]
+baseurl = http://content.example.com/ocp4.2/x86_64/rhelopt
+enabled = true
+gpgcheck = false
+name = Remote classroom copy of RHEL 7.6 Optional Packages
+
+[rhel-7-server-extras-rpms]
+baseurl = http://content.example.com/ocp4.2/x86_64/rheladditional/rhel-7-server-extras-rpms
+enabled = true
+gpgcheck = false
+name = Remote classroom copy of RHEL 7.6 Extra Packages
+
+[rhel-server-rhscl-7-rpms]
+baseurl = http://content.example.com/ocp4.2/x86_64/rhelrhscl
+enabled = true
+gpgcheck = false
+name = Remote classroom copy of RHSCL
