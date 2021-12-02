@@ -1,0 +1,72 @@
+Metadata-Version: 2.1
+Name: selinux
+Version: 0.2.1
+Summary: shim selinux module
+Home-page: https://github.com/pycontribs/selinux
+Author: Sorin Sbarnea
+Author-email: sorin.sbarnea@gmail.com
+Maintainer: Sorin Sbarnea
+Maintainer-email: sorin.sbarnea@gmail.com
+License: MIT license
+Project-URL: Bug Tracker, https://github.com/pycontribs/selinux/issues
+Project-URL: Release Management, https://github.com/pycontribs/selinux/releases
+Project-URL: CI: Travis, https://travis-ci.com/pycontribs/selinux
+Project-URL: Source Code, https://github.com/pycontribs/selinux
+Keywords: selinux,virtualenv
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: System :: Systems Administration
+Classifier: Topic :: Utilities
+Requires-Python: !=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7
+Description-Content-Type: text/x-rst; charset=UTF-8
+Requires-Dist: distro (>=1.3.0)
+Requires-Dist: setuptools (>=39.0)
+
+.. image:: https://travis-ci.com/pycontribs/selinux.svg?branch=master
+    :target: https://travis-ci.com/pycontribs/selinux
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/python/black
+   :alt: Python Black Code Style
+
+selinux
+=======
+
+Pure-python selinux **shim** module for use in virtualenvs in oder to avoid
+failure to load selinux in Ansible modules.
+
+You still need to have libselinux python bindings package installed on your
+system for it to work but you no longer have the problem of not being able
+to import it from inside isolated (default) virtualenvs.
+
+This package was also tested as installed outside virtualenvs and seems not
+to interfere with the original library.
+
+So far testing is done on:
+
+* CentOS 7
+* CentOS 8
+* Debian (latest)
+* Fedora 28
+* RHEL 8
+* Ubuntu (latest)
+
+The change-list can be accessed at `releases`__.
+
+__ https://github.com/pycontribs/selinux/releases
+
+

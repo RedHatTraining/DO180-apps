@@ -1,0 +1,3 @@
+[console_scripts]
+openshift-ansible-gen = openshift.ansiblegen.cli:commandline
+

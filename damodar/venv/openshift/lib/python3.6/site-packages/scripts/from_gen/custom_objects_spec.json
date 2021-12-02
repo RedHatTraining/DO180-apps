@@ -1,0 +1,638 @@
+{
+  "/apis/{group}/{version}/{plural}": {
+    "parameters": [
+      {
+        "uniqueItems": true,
+        "type": "string",
+        "description": "If 'true', then the output is pretty printed.",
+        "name": "pretty",
+        "in": "query"
+      },
+      {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's group name",
+        "type": "string"
+      },
+      {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's version",
+        "type": "string"
+      },
+      {
+        "name": "plural",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's plural name. For TPRs this would be lowercase plural kind.",
+        "type": "string"
+      }
+    ],
+    "get": {
+      "operationId": "listClusterCustomObject",
+      "description": "list or watch cluster scoped custom objects",
+      "tags": [
+        "custom_objects"
+      ],
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/json;stream=watch"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "parameters": [
+        {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "A selector to restrict the list of returned objects by their labels. Defaults to everything.",
+          "name": "labelSelector",
+          "in": "query"
+        },
+        {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "When specified with a watch call, shows changes that occur after that particular version of a resource. Defaults to changes from the beginning of history. When specified for list: - if unset, then the result is returned from remote storage based on quorum-read flag; - if it's 0, then we simply return what we currently have in cache, no guarantee; - if set to non zero, then the result is at least as fresh as given rv.",
+          "name": "resourceVersion",
+          "in": "query"
+        },
+        {
+          "name": "watch",
+          "uniqueItems": true,
+          "type": "boolean",
+          "description": "Watch for changes to the described resources and return them as a stream of add, update, and remove notifications.",
+          "in": "query"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "post": {
+      "operationId": "createClusterCustomObject",
+      "description": "Creates a cluster scoped Custom object",
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The JSON schema of the Resource to create.",
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "Created",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    }
+  },
+  "/apis/{group}/{version}/namespaces/{namespace}/{plural}": {
+    "parameters": [
+      {
+        "uniqueItems": true,
+        "type": "string",
+        "description": "If 'true', then the output is pretty printed.",
+        "name": "pretty",
+        "in": "query"
+      },
+      {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's group name",
+        "type": "string"
+      },
+      {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's version",
+        "type": "string"
+      },
+      {
+        "name": "namespace",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's namespace",
+        "type": "string"
+      },
+      {
+        "name": "plural",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's plural name. For TPRs this would be lowercase plural kind.",
+        "type": "string"
+      }
+    ],
+    "get": {
+      "operationId": "listNamespacedCustomObject",
+      "description": "list or watch namespace scoped custom objects",
+      "tags": [
+        "custom_objects"
+      ],
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/json;stream=watch"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "parameters": [
+        {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "A selector to restrict the list of returned objects by their labels. Defaults to everything.",
+          "name": "labelSelector",
+          "in": "query"
+        },
+        {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "When specified with a watch call, shows changes that occur after that particular version of a resource. Defaults to changes from the beginning of history. When specified for list: - if unset, then the result is returned from remote storage based on quorum-read flag; - if it's 0, then we simply return what we currently have in cache, no guarantee; - if set to non zero, then the result is at least as fresh as given rv.",
+          "name": "resourceVersion",
+          "in": "query"
+        },
+        {
+          "name": "watch",
+          "uniqueItems": true,
+          "type": "boolean",
+          "description": "Watch for changes to the described resources and return them as a stream of add, update, and remove notifications.",
+          "in": "query"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "post": {
+      "operationId": "createNamespacedCustomObject",
+      "description": "Creates a namespace scoped Custom object",
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The JSON schema of the Resource to create.",
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "Created",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    }
+  },
+  "/apis/{group}/{version}/{plural}/{name}": {
+    "parameters": [
+      {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's group",
+        "type": "string"
+      },
+      {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's version",
+        "type": "string"
+      },
+      {
+        "name": "plural",
+        "in": "path",
+        "required": true,
+        "description": "the custom object's plural name. For TPRs this would be lowercase plural kind.",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "description": "the custom object's name",
+        "type": "string"
+      }
+    ],
+    "get": {
+      "operationId": "getClusterCustomObject",
+      "description": "Returns a cluster scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "responses": {
+        "200": {
+          "description": "A single Resource",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "delete": {
+      "operationId": "deleteClusterCustomObject",
+      "description": "Deletes the specified cluster scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/v1.DeleteOptions"
+          }
+        },
+        {
+          "name": "gracePeriodSeconds",
+          "uniqueItems": true,
+          "type": "integer",
+          "description": "The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.",
+          "in": "query"
+        },
+        {
+          "name": "orphanDependents",
+          "uniqueItems": true,
+          "type": "boolean",
+          "description": "Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the \"orphan\" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both.",
+          "in": "query"
+        },
+        {
+          "name": "propagationPolicy",
+          "uniqueItems": true,
+          "type": "string",
+          "description": "Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.",
+          "in": "query"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "patch": {
+      "operationId": "patchClusterCustomObject",
+      "description": "patch the specified cluster scoped custom object",
+      "consumes": [
+        "application/merge-patch+json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The JSON schema of the Resource to patch.",
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "put": {
+      "operationId": "replaceClusterCustomObject",
+      "description": "replace the specified cluster scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The JSON schema of the Resource to replace.",
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    }
+  },
+  "/apis/{group}/{version}/namespaces/{namespace}/{plural}/{name}": {
+    "parameters": [
+      {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's group",
+        "type": "string"
+      },
+      {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's version",
+        "type": "string"
+      },
+      {
+        "name": "namespace",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's namespace",
+        "type": "string"
+      },
+      {
+        "name": "plural",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's plural name. For TPRs this would be lowercase plural kind.",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "description": "the custom object's name",
+        "type": "string"
+      }
+    ],
+    "get": {
+      "operationId": "getNamespacedCustomObject",
+      "description": "Returns a namespace scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "responses": {
+        "200": {
+          "description": "A single Resource",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "delete": {
+      "operationId": "deleteNamespacedCustomObject",
+      "description": "Deletes the specified namespace scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/v1.DeleteOptions"
+          }
+        },
+        {
+          "name": "gracePeriodSeconds",
+          "uniqueItems": true,
+          "type": "integer",
+          "description": "The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.",
+          "in": "query"
+        },
+        {
+          "name": "orphanDependents",
+          "uniqueItems": true,
+          "type": "boolean",
+          "description": "Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the \"orphan\" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both.",
+          "in": "query"
+        },
+        {
+          "name": "propagationPolicy",
+          "uniqueItems": true,
+          "type": "string",
+          "description": "Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.",
+          "in": "query"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "patch": {
+      "operationId": "patchNamespacedCustomObject",
+      "description": "patch the specified namespace scoped custom object",
+      "consumes": [
+        "application/merge-patch+json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The JSON schema of the Resource to patch.",
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "put": {
+      "operationId": "replaceNamespacedCustomObject",
+      "description": "replace the specified namespace scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The JSON schema of the Resource to replace.",
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    }
+  }
+}
