@@ -1,0 +1,345 @@
+#!/bin/bash
+#
+# Copyright 2016 Red Hat, Inc.
+#
+# NAME
+#     rht-verify-workstation - confirm necessary classroom services are active
+#
+# SYNOPSIS
+#     rht-verify-workstation
+#
+# DESCRIPTION
+#     This script checks to see if the various services are operational for
+#     a private UCF classroom environment.
+#
+# CHANGELOG
+#   * Fri Nov  4 2016 Robert Locke <rlocke@redhat.com>
+#   - fork from rht-verify-classroom
+#   - outline of things to check:
+#     hostname is workstation.lab.example.com
+#     /etc/rht was populated
+#     local services are functional: 
+#        retrieval of http://rht
+#        dns queries
+#        active firewalld zones
+#     classroom/content is accessible
+#     (optional)
+#     test one other VM:
+#        /etc/rht was populated
+#        http access to content
+#        dns queries
+#        classroom/content is accessible
+
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
+log_file=/root/rht-verify-workstation.log
+
+# FIXME
+exit
+
+# Standard variables/locations
+course_file=/etc/rht
+locale_file=/content/ks/rht-locale
+manifest_dir=/content/manifests
+
+# Source the standard variables if available
+[[ -r ${course_file} ]] && source ${course_file}
+course=${RHT_COURSE:=rhel}
+venue=${RHT_VENUE:=ilt}
+capacity=${RHT_CAPACITY:=20}
+
+# Define some default values for this tool
+redhat_release=$(sed -e 's/.*release //' -e 's/ .*//' /etc/redhat-release)
+classroom_fqdn=classroom.example.com
+content_fqdn=content.example.com
+package_list='classroom-config redhat-survey'
+network_list="254 253 252"
+start_services='httpd dhcpd named chronyd'
+start_sockets=''
+stop_services='network kdump'
+link_list='/var/www/html/materials'
+dir_list="/content/rhel${redhat_release}"
+file_list="${dir_list}/x86_64/dvd/GPL"
+dns_host_list=""
+for i in $(seq 0 ${capacity}); do
+  dns_host_list="${dns_host_list} workstation.pod${i}.example.com"
+done
+
+# source the content rpm list of variables (the future way to do this)
+varsfile="/content/courses/${course}/${RHT_VMTREE%/*}/infrastructure/rht-verify-classroom.vars"
+[[ -r ${varsfile} ]] && source ${varsfile}
+
+# define helper functions
+
+function log() {
+  # This function presumes channel 3 has been opened before being called
+  echo "$(date --rfc-3339=seconds) - $@" 1>&3
+}
+
+function print_Info() {
+  if [[ $# -gt 0 ]]
+  then
+    echo -e "$@"
+    log     "$@"
+  else
+    while read data
+    do
+      echo -e "${data}"
+      log     "${data}"
+    done
+  fi
+}
+
+function print_Warning() {
+  echo -e "   \e[1;33mWarning\e[0;39m: $@"
+  log     "   Warning: $@"
+}
+
+function print_Error() {
+  echo -e "   \e[1;31mError\e[0;39m: $@"
+  log     "   Error: $@"
+}
+
+function print_PASS() {
+  let pass_count++
+  echo -e "$@ \e[1;32mPASS\e[0;39m"
+  log     "$@ PASS"
+}
+
+function print_FAIL() {
+  global_fail=true
+  let fail_count++
+  echo -e "$@ \e[1;31mFAIL\e[0;39m"
+  log     "$@ FAIL"
+}
+
+function print_WARN() {
+  echo -e "$@ \e[1;33mWARN\e[0;39m"
+  log     "$@ WARN"
+}
+
+function check_hostname() {
+  msg='Test for required hostname ................ '
+  if [[ "$(hostname)" != "${classroom_fqdn}" ]]; then
+    print_FAIL "${msg}"
+  else
+    print_PASS "${msg}"
+  fi
+}
+
+function check_required_pkgs() {
+  fail=false
+  for pkg in ${package_list}
+  do
+    if rpm -q ${pkg} > /dev/null 2>&1; then
+      if ! rpm -V ${pkg} > /dev/null 2>&1; then
+        print_Error "${pkg} has been changed"
+	fail=true
+	rpm -V ${pkg} | sed 's/.*/\\   &/' | print_Info
+      fi
+    else
+      print_Error "${pkg} package missing"
+      fail=true
+    fi
+  done
+  msg='Test for required packages ................ '
+  if [[ "${fail}" = true ]]; then
+    print_FAIL "${msg}"
+  else
+    print_PASS "${msg}"
+  fi
+}
+
+function check_network() {
+  fail=false
+  eth0_addr_info="$(ip addr show eth0)"
+  # is eth0 up with 172.25.{network_list}.254/24
+  if echo "${eth0_addr_info}" | grep -q 'state UP'; then
+    for subnet in ${network_list}; do
+      ip_addr=172.25.${subnet}.254/24
+      if ! echo "${eth0_addr_info}" | grep -q "${ip_addr}"; then
+        echo "Error: eth0 does not have address ${ip_addr}"
+        fail=true
+      fi
+    done
+  else
+    print_Error "eth0 is not active"
+    fail=true
+  fi
+  eth1_addr_info="$(ip addr show eth1)"
+  # is eth1 up? if so, display IP address
+  if echo "${eth1_addr_info}" | grep -q 'state UP'; then
+    eth1_ipaddr="$(echo ${eth1_addr_info} | grep 'inet ' | sed 's/.*inet //; s/ .*//')"
+    # display IP address of eth1
+    print_Info '   IP address of eth1:' ${eth1_ipaddr}
+  else
+    print_Warning "eth1 is not active"
+    let warn_count++
+  fi
+  msg='Confirm current network settings .......... '
+  if [[ "${fail}" = true ]]; then
+    print_FAIL "${msg}"
+  else
+    print_PASS "${msg}"
+  fi
+}
+
+function check_services() {
+  fail=false
+  for i in ${start_services}; do 
+    if ! systemctl --quiet is-active ${i}.service; then
+      print_Error "${i} service is not active"
+      fail=true
+    fi
+  done
+  for i in ${start_sockets}; do
+    if ! systemctl --quiet is-active ${i}.socket; then
+      print_Error "${i} socket is not active"
+      fail=true
+    fi
+  done
+  for i in ${stop_services}; do
+    if systemctl --quiet is-active ${i}.service; then
+      print_Error "${i} service is active"
+      fail=true
+    fi
+  done
+  msg='Test for active services and sockets ...... '
+  if [[ "${fail}" = true ]]; then
+    print_FAIL "${msg}"
+  else
+    print_PASS "${msg}"
+  fi
+}
+
+function check_file_existence() {
+
+  function check_file() {
+    if [[ ! -f "${1}" ]]; then
+	print_Error "file ${1} does not exist"
+	fail=true
+    fi
+  }
+
+  function check_dir() {
+    if [[ ! -d "${1}" ]]; then
+	print_Error "directory ${1} does not exist"
+	fail=true
+    fi
+  }
+
+  function check_link() {
+    if [[ ! -L "${1}" ]]; then
+	print_Error "symlink ${1} does not exist"
+	fail=true
+    fi
+  }
+
+  fail=false
+
+  for f in ${link_list} ; do
+    check_link ${f}
+  done
+  for f in ${dir_list} ; do
+    check_dir ${f}
+  done
+  for f in ${file_list} ; do
+    check_file ${f}
+  done
+
+  msg='Confirm classroom file availability ....... '
+  if [[ "${fail}" = true ]]; then
+    print_FAIL "${msg}"
+  else
+    print_PASS "${msg}"
+  fi
+}
+
+function check_dns_answers() {
+
+  # Do we need to compare against an expected IP address, or is
+  # a successful response by DNS good enough?
+  function check_dns_host() {
+    if ! host "${1}" > /dev/null 2>&1; then
+	print_Error "could not resolve ${1}"
+	fail=true
+    fi
+  }
+
+  fail=false
+  check_dns_host ${content_fqdn}
+  for h in ${dns_host_list} ; do
+    check_dns_host ${h}
+  done
+  msg='Confirm classroom DNS functionality ....... '
+  if [[ "${fail}" = true ]]; then
+    print_FAIL "${msg}"
+  else
+    print_PASS "${msg}"
+  fi
+}
+
+function check_http_answers() {
+
+  # Do we need to compare against some checksum, or is it enough
+  # that the file was successfully downloaded?
+  function check_http_file() {
+    if ! curl -f "${1}" > /dev/null 2>&1; then
+	print_Error "could not download ${1}"
+	fail=true
+    fi
+  }
+
+  fail=false
+  check_http_file http://${content_fqdn}/rhel${redhat_release}/x86_64/dvd/GPL
+  msg='Confirm classroom HTTP functionality ...... '
+  if [[ "${fail}" = true ]]; then
+    print_FAIL "${msg}"
+  else
+    print_PASS "${msg}"
+  fi
+}
+
+function check_course() {
+  msg='Confirm course settings ................... '
+  if [[ -r "${course_file}" ]]; then
+    sed 's/.*/\\   &/' ${course_file} | print_Info
+    if [[ -n "${RHT_COURSE}" ]]; then
+      print_PASS "${msg}"
+    else
+      print_Warning "RHT_COURSE is empty"
+      let warn_count++
+      print_WARN "${msg}"
+    fi
+  else
+    print_FAIL "${msg}"
+  fi
+}
+
+##### Main area #####
+
+# Run as root (must do this first)
+if [[ "${EUID}" -gt "0" ]] ; then
+  ${sudo:-/usr/bin/sudo} $0 "$@"
+  exit
+fi
+
+# Open log file
+exec 3>> ${log_file}
+
+global_fail=false
+
+pass_count=0 warn_count=0 fail_count=0
+check_hostname
+check_required_pkgs
+check_network
+check_services
+check_file_existence
+check_dns_answers
+check_http_answers
+check_course
+
+echo -e "*** SUMMARY: [\\033[1;32mPASS\\033[0;39m=${pass_count}] [\\033[1;33mWARNING\\033[0;39m=${warn_count}] [\\033[1;31mFAIL\\033[0;39m=${fail_count}] ***"
+log "*** SUMMARY: [PASS=${pass_count}] [WARNING=${warn_count}] [FAIL=${fail_count}] ***"
+
+[[ ${global_fail} != 'true' ]]

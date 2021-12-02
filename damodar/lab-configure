@@ -1,0 +1,246 @@
+#!/usr/bin/bash
+
+# CHANGELOG
+#   * Thu Nov 19 2020 Michael Phillips <miphilli@redhat.com>
+#   - change ERROR message to use red.
+#   * Tue Nov 10 2020 Michael Phillips <miphilli@redhat.com>
+#   - configure HTPasswd IdP if needed
+#   * Fri Sep 11 2020 Michael Phillips <miphilli@redhat.com>
+#   - lab-configure was completely redesigned for DO285 on OCP4.5
+#   - lab-configure does not need to do anything for DO280
+#   - lab-configure only needs GitHub and Quay.io info for DO180
+#   - All other information previously gathered by lab-configure is static for DO285 OCP4.5
+
+TIMEOUT=6
+
+if [ "${1}" == "-h" -o "${1}" == "--help" ]
+then
+  echo
+  echo "The lab-configure script for DO285 ensures that static variables are"
+  echo "configured in /usr/local/etc/ocp4.config. The lab-configure script"
+  echo "prompts for your 'GitHub' username and 'Quay.io' username if they have"
+  echo "not been set in /usr/local/etc/ocp4.config. Use the -d option to"
+  echo "replace existing 'GitHub' and 'Quay.io' usernames."
+  echo
+  echo "Syntax: lab-configure [-d]"
+  echo
+  echo "IMPORTANT: The /usr/local/etc/ocp4.config file might be immutable."
+  echo "This is to prevent accidental deletion or changes to the file."
+  echo "The immutable setting can be removed with:"
+  echo "[student@workstation ~$] sudo chattr -i /usr/local/etc/ocp4.config"
+  echo
+else
+  # Ensure /usr/local/etc/ocp4.config has all static lines
+  # Verify that /usr/local/etc/ocp4.config exits
+  LINES=( \
+   'RHT_OCP4_MASTER_API=https://api.ocp4.example.com:6443' \
+   'RHT_OCP4_WILDCARD_DOMAIN=apps.ocp4.example.com' \
+   'RHT_OCP4_NEXUS_SERVER=nexus-common.apps.ocp4.example.com' \
+   'RHT_OCP4_DEV_USER=developer' \
+   'RHT_OCP4_DEV_PASSWORD=developer' \
+   'RHT_OCP4_USER_PASSWD=redhat' \
+  )
+  if [ -f /usr/local/etc/ocp4.config ]
+  then
+    sudo chattr -i /usr/local/etc/ocp4.config
+    for LINE in "${LINES[@]}"
+    do
+      key=$(echo ${LINE} | cut -d= -f1)
+      value=$(echo ${LINE} | cut -d= -f2)
+      if ! grep -q "^${key}=" /usr/local/etc/ocp4.config
+      then
+        sudo bash -c "echo ${key}=${value} >> /usr/local/etc/ocp4.config"
+      else
+        if [ "$(grep -q ^${key}= /usr/local/etc/ocp4.config)" != "${key}=${value}" ]
+        then
+          sudo sed -i "/^${key}=/c ${key}=${value}" /usr/local/etc/ocp4.config
+        fi
+      fi
+    done
+  else
+    for LINE in "${LINES[@]}"
+    do
+      sudo bash -c "echo ${LINE} >> /usr/local/etc/ocp4.config"
+    done
+  fi
+  
+  function readline {
+    local return_var="$1"
+    local prompt_msg="$2"
+  
+    local input_line=''
+  
+    while [ "${input_line}" = '' ]; do
+      echo -n
+      read -e -p " . Enter the ${prompt_msg}: " -i "${!return_var}" input_line
+      if [ "${input_line}" = '' ]; then
+        echo "   ${prompt_msg} cannot be empty. Try again."
+      fi
+    done
+  
+    eval ${return_var}="'${input_line}'"
+  }
+  
+  # Check RHT_OCP4_GITHUB_USER line in /usr/local/etc/ocp4.config
+  grep -q RHT_OCP4_GITHUB_USER /usr/local/etc/ocp4.config
+  if [ $? -ne 0 -o "${1}" == "-d" ]
+  then
+    echo
+    readline github_user 'GitHub account name'
+    if [ -n "${github_user}" ];
+    then
+      echo "   Verifying GitHub account name: ${github_user}"
+      github_user_name=$(curl --connect-timeout "${TIMEOUT}" -sk "https://api.github.com/search/users?q=${github_user}" | jq -r ".items[0].login")
+      if [ "${github_user_name}" != "${github_user}" ]
+      then
+        echo -e "   \\033[1;31mERROR\\033[0;39m: Cannot find GitHub account user '${github_user}'." 1>&2
+        echo
+        echo "   To reconfigure, run: lab-configure -d"
+        echo
+        exit 5
+      fi
+    fi
+  fi
+  
+  # Check RHT_OCP4_QUAY_USER line in /usr/local/etc/ocp4.config
+  grep -q RHT_OCP4_QUAY_USER /usr/local/etc/ocp4.config
+  if [ $? -ne 0 -o "${1}" == "-d" ]
+  then
+    echo
+    readline quay_user 'Quay.io account name'
+    if [ -n "${quay_user}" ];
+    then
+      echo "   Verifying Quay.io account name: ${quay_user}"
+      http_status=$( curl --connect-timeout "${TIMEOUT}" -sk -o /dev/null -w '%{http_code}' "https://quay.io/api/v1/users/${quay_user}" )
+      if [ "${http_status}" != "200" ]
+      then
+        echo -e "   \\033[1;31mERROR\\033[0;39m: Cannot find Quay.io account user '${quay_user}'." 1>&2
+        echo
+        echo "   To reconfigure, run: lab-configure -d"
+        echo
+        exit 5
+      fi
+    fi
+  fi
+
+  sudo chattr -i /usr/local/etc/ocp4.config
+  if grep -q "RHT_OCP4_GITHUB_USER=${github_user}" /usr/local/etc/ocp4.config
+  then
+    echo
+    echo " . GitHub account name:  $(grep RHT_OCP4_GITHUB_USER /usr/local/etc/ocp4.config | cut -d= -f2)"
+  else
+    echo
+    echo -n " . Configuring RHT_OCP4_GITHUB_USER variable: "
+    if grep -q RHT_OCP4_GITHUB_USER /usr/local/etc/ocp4.config
+    then
+      sudo sed -i "/^RHT_OCP4_GITHUB_USER=/c RHT_OCP4_GITHUB_USER=${github_user}" /usr/local/etc/ocp4.config
+    else
+      sudo sed -i "$ i RHT_OCP4_GITHUB_USER=${github_user}" /usr/local/etc/ocp4.config
+    fi
+    if [ $? -eq 0 ]
+    then
+      echo -e "\\033[1;36mSUCCESS\\033[0;39m"
+    else
+      echo -e "\\033[1;31mFAIL\\033[0;39m"
+    fi
+  fi
+
+  if grep -q "RHT_OCP4_QUAY_USER=${quay_user}" /usr/local/etc/ocp4.config
+  then
+    echo " . Quay.io account name: $(grep RHT_OCP4_QUAY_USER /usr/local/etc/ocp4.config | cut -d= -f2)"
+  else
+    echo -n " . Configuring RHT_OCP4_QUAY_USER variable:   "
+    if grep -q RHT_OCP4_QUAY_USER /usr/local/etc/ocp4.config
+    then
+      sudo sed -i "/^RHT_OCP4_QUAY_USER=/c RHT_OCP4_QUAY_USER=${quay_user}" /usr/local/etc/ocp4.config
+    else
+      sudo sed -i "$ i RHT_OCP4_QUAY_USER=${quay_user}" /usr/local/etc/ocp4.config
+    fi
+    if [ $? -eq 0 ]
+    then
+      echo -e "\\033[1;36mSUCCESS\\033[0;39m"
+    else
+      echo -e "\\033[1;31mFAIL\\033[0;39m"
+    fi
+  fi
+
+  echo
+  echo " . To reconfigure, run: lab-configure -d"
+
+  # Log in to the cluster
+  dev_user="$(grep RHT_OCP4_DEV_USER /usr/local/etc/ocp4.config | cut -d= -f2)"
+  if [ -z "${dev_user}" ]
+  then
+    dev_user="developer"
+    sudo sed -i "$ i RHT_OCP4_DEV_USER=${dev_user}" /usr/local/etc/ocp4.config
+  fi
+  dev_password="$(grep RHT_OCP4_DEV_PASSWORD /usr/local/etc/ocp4.config | cut -d= -f2)"
+  if [ -z "${dev_password}" ]
+  then
+    dev_password="developer"
+    sudo sed -i "$ i RHT_OCP4_DEV_PASSWORD=${dev_password}" /usr/local/etc/ocp4.config
+  fi
+
+  echo
+  echo " . Ensuring user '${dev_user}' can log in to the OpenShift cluster."
+  oc login -u kubeadmin -p $(ssh lab@utility cat /home/lab/ocp4/auth/kubeadmin-password) https://api.ocp4.example.com:6443 --insecure-skip-tls-verify &> /dev/null
+  if [ $? -eq 0 ]
+  then
+    # Check for existing HTPasswd IdP
+    existing_secret=$(oc get oauth cluster -o jsonpath="{.spec.identityProviders[?(@.type == 'HTPasswd')].htpasswd.fileData.name}" )
+    developer_login="False"
+    if [ -n "${existing_secret}" ]
+    then
+      if oc login -u ${dev_user} -p ${dev_password} https://api.ocp4.example.com:6443 --insecure-skip-tls-verify &> /dev/null
+      then
+        developer_login="True"
+        oc login -u kubeadmin -p $(ssh lab@utility cat /home/lab/ocp4/auth/kubeadmin-password) https://api.ocp4.example.com:6443 --insecure-skip-tls-verify &> /dev/null
+      fi
+    fi
+  
+    if [ -z "${existing_secret}" -o "${developer_login}" == "False" ]
+    then
+      # Create local HTPasswd file
+      htpasswd -cb /tmp/do180-htpasswd ${dev_user} ${dev_password} &> /dev/null
+      htpasswd -b /tmp/do180-htpasswd admin redhat &> /dev/null
+      if oc get secret/localusers -n openshift-config &> /dev/null
+      then
+        oc set data secret/localusers -n openshift-config --from-file htpasswd=/tmp/do180-htpasswd &> /dev/null
+      else
+        oc create secret generic localusers --from-file htpasswd=/tmp/do180-htpasswd -n openshift-config &> /dev/null
+      fi
+      # Remove the local htpasswd file
+      rm /tmp/do180-htpasswd
+      # Patch oauth/cluster to use HTPasswd
+      oc patch oauth/cluster --type merge --patch '{"spec":{"identityProviders": [{"htpasswd": {"fileData": {"name": "localusers"}},"mappingMethod": "claim","name": "localusers","type": "HTPasswd"}]}}' &> /dev/null
+      if [ $? -eq 0 ]
+      then
+        oc adm policy add-cluster-role-to-user cluster-admin admin &> /dev/null
+        echo " . HTPasswd Identify Provider configured"
+        echo " . NOTE: It might take up to one minute before user '${dev_user}'"
+        echo "         can successfully log in to the OpenShift cluster."
+      fi
+    fi
+  
+    # Allow developer the ability to see pods in the openshift-image-registry namespace
+    # Check for do180view role
+    oc get roles.rbac.authorization.k8s.io -n openshift-image-registry -o name | grep -q do180view
+    if [ $? -ne 0 ]
+    then
+      oc create role do180view --verb list,get --resource pods,pods/status -n openshift-image-registry &> /dev/null
+    fi
+    # Check for do180view role binding
+    oc get rolebindings.rbac.authorization.k8s.io -n openshift-image-registry -o name | grep -q do180view
+    if [ $? -ne 0 ]
+    then
+      oc create rolebinding do180view --role do180view --user developer -n openshift-image-registry &> /dev/null
+    fi
+  else
+    echo "ERROR: Cannot currently log in as user kubeadmin." 1>&2
+    exit 1
+  fi
+
+  echo
+fi
+
+
