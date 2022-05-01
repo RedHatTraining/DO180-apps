@@ -1,0 +1,65 @@
+Clone this course's sample applications from your personal GitHub account to your workstation machine. Perform the following steps:
+
+    Run the following command to clone this course's sample applications repository. Replace yourgituser with the name of your personal GitHub account.
+
+    [student@workstation ~]$ git clone https://github.com/_yourgituser_/DO180-apps
+    Cloning into 'DO180-apps'...
+    ...output omitted...
+
+    Verify that /home/user/DO180-apps is a Git repository.
+
+    [student@workstation ~]$ cd DO180-apps
+    [student@workstation DO180-apps]$ git status
+    # On branch master
+    nothing to commit, working directory clean
+
+    Create a new branch to test your new personal access token.
+
+    [student@workstation DO180-apps]$ git checkout -b testbranch
+    Switched to a new branch `testbranch`
+
+    Make a change to the TEST file and then commit it to Git.
+
+    [student@workstation DO180-apps]$ echo "DO180" > TEST
+    [student@workstation DO180-apps]$ git add .
+    [student@workstation DO180-apps]$ git commit -am "DO180"
+    ...output omitted...
+
+    Push the changes to your recently created testing branch.
+
+    [student@workstation DO180-apps]$ git push --set-upstream origin testbranch
+    Username for `https://github.com`:  1
+    Password for `https://_yourgituser_@github.com`:  2
+    ...output omitted...
+
+    1
+    	
+
+    Enter your GitHub username
+
+    2
+    	
+
+    Enter your personal access token
+
+    Make other change to a text file, commit it and push it. You will notice you are no longer asked to put your user and password. This is because the git config command you ran in step 1.7.
+
+    [student@workstation DO180-apps]$ echo "OCP4.6" > TEST
+    [student@workstation DO180-apps]$ git add .
+    [student@workstation DO180-apps]$ git commit -am "OCP4.6"
+    [student@workstation DO180-apps]$ git push
+    ...output omitted...
+
+    Verify that /home/user/DO180-apps contains this course's sample applications, and change back to the user's home folder.
+
+    [student@workstation DO180-apps]$ head README.md
+    # DO180-apps
+    ...output omitted...
+    [student@workstation DO180-apps]$ cd ~
+    [student@workstation ~]$
+
+    Now that you have a local clone of the DO180-apps repository on the workstation machine, and you have executed the lab-configure command successfully, you are ready to start this course's exercises.
+
+    During this course, all exercises that build applications from source start from the master branch of the DO180-apps Git repository. Exercises that make changes to source code require you to create new branches to host your changes so that the master branch always contains a known good starting point. If for some reason you need to pause or restart an exercise and need to either save or discard changes you make into your Git branches, refer to Appendix E, Useful Git Commands.
+
+    This concludes the guided exercise.
