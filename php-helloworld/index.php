@@ -1,6 +1,6 @@
 <?php
 
-print "yoooooo00"
+print "yoooooo000000"
 print "Hello, World! php version is " . PHP_VERSION . "\n";
 print "A change is coming!\n"
 ?>
