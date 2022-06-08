@@ -1,0 +1,173 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "todonodejs-persistent",
+    "annotations": {
+      "openshift.io/display-name": "TODO Application NodeJS 12.0 and MySQL 8"
+    }
+  },
+  "message": "",
+  "labels": {
+    "template": "todonodejs-mysql-persistent-template",
+    "app": "todonodejs"
+  },
+  "objects": [
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "name": "mysql",
+        "labels": {
+          "name": "mysql"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "image": "registry.redhat.io/rhel8/mysql-80:1",
+            "name": "mysql",
+            "env": [
+              {
+                "name": "MYSQL_ROOT_PASSWORD",
+                "value": "r00tpa55"
+              },
+              {
+                "name": "MYSQL_USER",
+                "value": "user1"
+              },
+              {
+                "name": "MYSQL_PASSWORD",
+                "value": "mypa55"
+              },
+              {
+                "name": "MYSQL_DATABASE",
+                "value": "items"
+              }
+            ],
+            "ports": [
+              {
+                "containerPort": 3306,
+                "name": "mysql"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "mountPath": "/var/lib/mysql/data",
+                "name": "db-volume"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "db-volume",
+            "persistentVolumeClaim": {
+              "claimName": "dbclaim"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "name": "todoapi",
+        "labels": {
+          "name": "todoapi"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "resources": {
+              "limits" : {
+                "cpu": "0.5"
+              }
+            },
+            "image": "quay.io/redhattraining/do180-todonodejs-12",
+            "name": "todoapi",
+            "ports": [
+              {
+                "containerPort": 30080,
+                "name": "nodejs-http"
+              }
+            ],
+            "env": [
+              {
+                "name": "MYSQL_ENV_MYSQL_DATABASE",
+                "value": "items"
+              },
+              {
+                "name": "MYSQL_ENV_MYSQL_USER",
+                "value": "user1"
+              },
+              {
+                "name": "MYSQL_ENV_MYSQL_PASSWORD",
+                "value": "mypa55"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "labels": {
+          "name": "todoapi"
+        },
+        "name": "todoapi"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 30080
+          }
+        ],
+        "selector": {
+          "name": "todoapi"
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "labels": {
+          "name": "mysql"
+        },
+        "name": "mysql"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 3306
+          }
+        ],
+        "selector": {
+          "name": "mysql"
+        }
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "dbclaim"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "10Mi"
+          }
+        }
+      }
+    }
+  ]
+}
