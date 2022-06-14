@@ -6,7 +6,7 @@
   "author": "Red Hat Training",
   "license": "ASL",
   "dependencies": {
-    "express": "4.20.x",
+    "express": "4.x",
     "html-errors": "latest"
   }
 }
