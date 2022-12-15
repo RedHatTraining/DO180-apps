@@ -1,0 +1,153 @@
+#!/bin/bash
+#
+# Copyright 2015-2021 Red Hat, Inc.
+#
+# NAME
+#     lab - wrapper for lab grading scripts
+#     demo - wrapper for demo grading scripts
+#
+# SYNOPSIS
+#     {lab|demo} {-h|--help}
+#     {lab|demo} PROBLEM {start|grade|finish}
+#
+# DESCRIPTION
+#     This script is a wrapper for the lab and demo setup/grading
+#     scripts. The labtool.shlib library and the helper grading script,
+#     {lab|demo}-PROBLEM, are downloaded from content.example.com if
+#     they are not found locally. The library functions are sourced,
+#     then the particular grading script is executed with the action to
+#     be taken passed as a parameter.
+#
+#     The ${lab_demo_mode} variable will be either 'lab' or 'demo'.
+#
+# CHANGELOG
+#   * Fri Dec 21 2018 George Hacker <ghacker@redhat.com>
+#   - shift documentation to use new verbs
+#   * Wed Sep 28 2016 George Hacker <ghacker@redhat.com>
+#   - removed message to contact instructor (not appropriate for ROLE)
+#   * Fri Jan 22 2016 George Hacker <ghacker@redhat.com>
+#   - PROBLEM scripts now responsible for printing usage messages
+#   * Thu Jan 07 2016 George Hacker <ghacker@redhat.com>
+#   - added "versions" command
+#   * Thu Nov 12 2015 George Hacker <ghacker@redhat.com>
+#   - export ${lab_demo_mode}, ${problem_name}, and other useful variables
+#   - added support for the --refresh option
+#   * Tue Oct 27 2015 George Hacker <ghacker@redhat.com>
+#   - always download platform function library to support helper scripts
+#   - move labtool.shlib out of grading-scripts directory
+#   - removed labtool-installkey.py
+#   * Mon Sep 28 2015 George Hacker <ghacker@redhat.com>
+#   - enable demo mode on all machines
+#   * Mon Jul  6 2015 George Hacker <ghacker@redhat.com>
+#   - finished incomplete comment in program header
+#   * Tue Feb 24 2015 Robert Locke <rlocke@redhat.com>
+#   - establish template version
+#   * Tue Oct 21 2014 Robert Locke <rlocke@redhat.com>
+#   - shift location of libraries and lab scripts to /usr/local/lib
+#   - retrieve all the libraries
+#   * Wed May 21 2014 George Hacker <ghacker@redhat.com>
+#   - added copyright notice and added PATH definition
+#   * Thu Apr 24 2014 George Hacker <ghacker@redhat.com>
+#   - disabled sanity-checking code & sudo for grading
+#   * Sun Apr 20 2014 George Hacker <ghacker@redhat.com>
+#   - original code
+
+# <blink>
+   ###################### IMPORTANT ########################
+   ###### DO NOT MAKE ANY CHANGES TO THIS FILE. IT IS ######
+   ###### MAINTAINED BY GHACKER@REDHAT.COM.           ######
+   #########################################################
+# </blink>
+
+PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin
+
+export lab_demo_mode="$(basename ${0})"
+export problem_name="${1}"
+export grade_verb="${2}"
+
+export function_lib='labtool.shlib'
+export platform_lib='labtool.do180.shlib'
+
+# Get RHT_* variable definitions
+[[ -f /etc/rht ]] && source /etc/rht
+
+# general functions (labtool.shlib) are found one level above grading-scripts
+# grading-scripts/ contains platform function library and helper scripts
+content='content.example.com'
+labtool_prefix="http://${content}/courses/${RHT_COURSE}/${RHT_VMTREE%/*}"
+grading_prefix="${labtool_prefix}/grading-scripts"
+
+# Additional functions for this shell script
+function panic {
+  local error_code=${1} ; shift
+  echo "Error: ${@}" 1>&2
+  exit ${error_code}
+}
+
+# Main area
+
+# Check for required RHT variables
+[[ -z "${RHT_COURSE}" ]] && panic 1 'RHT_COURSE not set!'
+[[ -z "${RHT_VMTREE}" ]] && panic 1 'RHT_VMTREE not set!'
+
+problem_script="${lab_demo_mode}-${problem_name}"
+
+# If not root, use sudo to give necessary privileges (when needed)
+[[ $(id -u) -ne 0 ]] && sudo=sudo
+
+cd /usr/local/lib
+
+# When called with --refresh option, clean up /usr/local/lib
+if [[ $# -eq 1 && ${1} == '--refresh' ]]
+then
+  ${sudo} rm -f {lab,demo}-* labtool*.shlib
+  exit 0
+fi
+
+# If functions are not found locally, download them
+if [[ ! -f ${function_lib} ]] ; then
+  if ! ${sudo} curl -s -f -O ${labtool_prefix}/${function_lib} ; then
+    panic 2 'unable to download grading functions!'
+  fi
+  ${sudo} chmod 644 ${function_lib}
+fi
+# Also download platform functions if not found
+if [[ ! -f ${platform_lib} ]] ; then
+  if ! ${sudo} curl -s -f -O ${grading_prefix}/${platform_lib} ; then
+    panic 2 'unable to download platform functions!'
+  fi
+  ${sudo} chmod 644 ${platform_lib}
+fi
+
+# If grading script is not found locally, download it
+if [[ ! -f ${problem_script} ]] ; then
+  if ${sudo} curl -s -f -O ${grading_prefix}/${problem_script} ; then
+    ${sudo} chmod 755 ${problem_script}
+  else
+    panic 2 "unknown problem specified and not found, ${problem_name}"
+  fi
+fi
+cd - &> /dev/null
+
+# Source library of functions
+source /usr/local/lib/${function_lib}
+
+# Validation
+[[ -z "${grade_verb}" ]] && debug 'Missing command'
+
+if [[ "${grade_verb}" == versions ]]
+then
+  for source in ${function_lib} ${platform_lib} ${problem_script}
+  do
+    echo "${source}"
+    if version_info="$(grep -A1 'CHANGELOG' /usr/local/lib/${source})"
+    then
+      echo "${version_info}" | sed -e 1d -e 's/^#//'
+      echo "   md5sum: $(md5sum < /usr/local/lib/${source})"
+    else
+      echo '   Undefined'
+    fi
+  done
+else
+  "/usr/local/lib/${problem_script}" "${grade_verb}"
+fi
