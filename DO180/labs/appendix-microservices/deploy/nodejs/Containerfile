@@ -1,0 +1,10 @@
+FROM quay.io/redhattraining/do180-todonodejs-12
+
+LABEL maintainer="username@example.com"
+
+EXPOSE	30080
+
+COPY build /opt/app-root/src
+RUN npm install restify-cors-middleware --save
+
+CMD [ "/bin/bash", "-c", "./run.sh" ]

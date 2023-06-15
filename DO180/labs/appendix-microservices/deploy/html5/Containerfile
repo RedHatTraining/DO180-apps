@@ -1,0 +1,3 @@
+FROM registry.redhat.io/rhel8/httpd-24:1
+ADD src/ /var/www/html/
+CMD run-httpd

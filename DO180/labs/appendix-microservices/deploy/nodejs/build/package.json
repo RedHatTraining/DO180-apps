@@ -1,0 +1,11 @@
+{
+  "name": "todo",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "restify": "8.4.0",
+    "sequelize": "5.21.1",
+    "mysql2": "2.0.0",
+    "restify-cors-middleware": "1.1.1"
+  }
+}
