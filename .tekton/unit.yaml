@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: unit
+  annotations:
+    pipelinesascode.tekton.dev/on-event: "[pull_request]"
+    pipelinesascode.tekton.dev/on-target-branch: "[refs/heads/*]"
+spec:
+  pipelineSpec:
+    tasks:
+      - name: example-task
+        taskSpec:
+            steps:
+              - image: registry.redhat.io/ubi7/ubi-minimal
+                name: testing
+                script: |
+                  #!/usr/bin/env bash
+                  set -e
+
+                  echo "hello 1"
