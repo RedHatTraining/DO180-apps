@@ -22,6 +22,7 @@ EXPOSE 8080 9990 9999
 ENTRYPOINT $JBOSS_HOME/bin/standalone.sh -c standalone-full-ha.xml
 ```
 
+sudo podman build -t jboss-eap .  
 sudo podman run -d --name jboss-eap-app -p 8080:8080 -p 9990:9990 -p 9999:9999 localhost/jboss-eap  
 sudo podman logs --tail=10 jboss-eap-app  
 sudo podman stop jboss-eap-app  
