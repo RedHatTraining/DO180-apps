@@ -38,7 +38,11 @@ sudo podman push docker.io/haiduc2023/jboss-eap:6.4.v1
   
 sudo podman run -d --name mydb -p 30306:3306 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user1 -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=books registry.access.redhat.com/rhscl/mysql-57-rhel7  
 gedit mysql.sh  
-sudo podman run -d --pod mypod --name mydb -p 30306:3306 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user1 -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=books registry.access.redhat.com/rhscl/mysql-57-rhel7  
+```
+#!/bin/bash
+
+sudo podman run -d --pod mypod --name mydb2 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user1 -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=books registry.access.redhat.com/rhscl/mysql-57-rhel7
+```
 
 
 oc new-app --template=mysql-persistent -p MYSQL_USER=user1 -p MYSQL_PASSWORD=mypa55 -p MYSQL_DATABASE=testdb -p MYSQL_ROOT_PASSWORD=r00tpa55 -p VOLUME_CAPACITY=10Gi  
