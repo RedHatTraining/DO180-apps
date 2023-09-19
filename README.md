@@ -36,7 +36,7 @@ sudo podman images
 sudo podman tag localhost/jboss-eap:6.4.v1 docker.io/haiduc2023/jboss-eap:6.4.v1  
 sudo podman push docker.io/haiduc2023/jboss-eap:6.4.v1  
   
-sudo podman run -d --name mydb -p 30306:3306 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user1 -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=books registry.access.redhat.com/rhscl/mysql-57-rhel7 -v /home/student/local/mysql:/var/lib/mysql/data  
+sudo podman run -d --name mydb -v /home/student/local/mysql:/var/lib/mysql/data -p 30306:3306 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user1 -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=books registry.access.redhat.com/rhscl/mysql-57-rhel7  
 gedit mysql.sh  
 ```
 #!/bin/bash
