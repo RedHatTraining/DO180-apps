@@ -57,4 +57,4 @@ Create mysql application as instructed below
 MYSQL_USER-user1
 MYSQL_PASSWORD=password
 MYSQL_DATABASE=books
-![image](https://github.com/haiduc2005/DO180-apps/assets/20736187/75a08470-459f-46ee-a19a-7e6bef97f22f)
+
