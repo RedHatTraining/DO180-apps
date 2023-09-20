@@ -41,7 +41,7 @@ Name of the container mydb
 Expose container port 3306 to port 30306 on local h  
 Pass the container parameter values  
 MYSQL_ROOT_PASSWORD=password  
-MYSQL USER=user1  
+MYSQL_USER=user1  
 MYSQL_PASSWORD=password  
 MYSQL_DATABASE=books  
 
