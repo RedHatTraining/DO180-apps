@@ -1,8 +1,29 @@
+1
+
+Edit the Docker file in path /home/openshift ex180 practice/EX180 as instructed below and build an image with name iboss-eap
+Copy the file /home/openshift_ex180 _ practice/iboss-eap-6.4.0 .zip from host to container image path /opt/jboss/. Unzip the copied file.
+
+﻿﻿Set ENV for BOSS HOME to /opt/boss/iboss-eap-6.4
+﻿﻿Create EAP user using $JBOSS_HOME/bin/add-user.sh admin admin@2016 --silent
+﻿﻿Expose ports 8080,9990 and 9999
+﻿﻿Start JBOSS using $JBOSS_HOME/bin/standalone.sh-c standalone-full-ha xml![image](https://github.com/haiduc2005/DO180-apps/assets/20736187/f636d304-82aa-4896-8151-d32594579f06)
+
+
+
+2
+
+RUN container and use the image jboss-eap build in previous section.
+Expose ports 8080 ,9990 and 9999 of containers to local host ports 8080,9990 and 9999 respectively.
+Set name of the container as "boss-eap-app"![image](https://github.com/haiduc2005/DO180-apps/assets/20736187/d62ef616-c338-400c-bb28-994ab9b29849)
+
+
+
 3
 
 Get last 10 lines of logs for container jboss-eap-app
 Stop the container boss-eap-app
 Remove the container jboss-eap-app
+
 
 
 4
