@@ -6,7 +6,7 @@ Copy the file /home/openshift_ex180 _ practice/jboss-eap-6.4.0 .zip from host to
 ﻿﻿Set ENV for BOSS HOME to /opt/boss/jboss-eap-6.4  
 ﻿﻿Create EAP user using $JBOSS_HOME/bin/add-user.sh admin admin@2016 --silent  
 ﻿﻿Expose ports 8080,9990 and 9999  
-﻿﻿Start JBOSS using $JBOSS_HOME/bin/standalone.sh-c standalone-full-ha xml  
+﻿﻿Start JBOSS using $JBOSS_HOME/bin/standalone.sh-c standalone-full-ha.xml  
 
 
 
