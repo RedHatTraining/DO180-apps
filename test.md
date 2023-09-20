@@ -29,7 +29,7 @@ Remove the container jboss-eap-app
 4
 
 Add a tag "6.4.v1" to the image jboss-eap (Build in Test 1)  
-Save the image with new tag to tar file jbos-eap.6.4.v1.tar  
+Save the image with new tag to tar file jboss-eap.6.4.v1.tar  
 Push the image with new tag "6.4.v1 to docker registry  
 
 
