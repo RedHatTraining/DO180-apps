@@ -34,6 +34,8 @@ Push the image with new tag "6.4.v1 to docker registry
 
 
 5
+
+
 Run myg| container using Podman and image registry.access.redhat.com/rhscl/mysql-57-rhel7  
 Name of the container mydb  
 Expose container port 3306 to port 30306 on local h  
