@@ -14,7 +14,7 @@ Copy the file /home/openshift_ex180 _ practice/jboss-eap-6.4.0 .zip from host to
 
 RUN container and use the image jboss-eap build in previous section.  
 Expose ports 8080 ,9990 and 9999 of containers to local host ports 8080,9990 and 9999 respectively.  
-Set name of the container as "boss-eap-app"  
+Set name of the container as "jboss-eap-app"  
   
 
 
