@@ -44,5 +44,12 @@ gedit mysql.sh
 sudo podman run -d --pod mypod --name mydb2 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user1 -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=books registry.access.redhat.com/rhscl/mysql-57-rhel7
 ```
 
+oc new-app --name=mysql-app --docker-image=registry.access.redhat.com/rhscl/mysql-57-rhel7 -e MYSQL_USER=user -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=books -l app=mydbapp --as-deployment-config  
+
+oc expose svc mysql-app --hostname=mysaltestapptesturl.com  
+oc cp mytestfile.txt mysql-app-1-clcqx:/tmp/  
+oc logs mysql-app-1-clcqx  
+oc get all  
+oc rsh mysql-app-1-clcqx  
 
 oc new-app --template=mysql-persistent -p MYSQL_USER=user1 -p MYSQL_PASSWORD=mypa55 -p MYSQL_DATABASE=testdb -p MYSQL_ROOT_PASSWORD=r00tpa55 -p VOLUME_CAPACITY=10Gi  
