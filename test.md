@@ -47,37 +47,40 @@ MYSQL_DATABASE=books
 
 6
 
-Create an mysql application as instructed below　　
-Name of the app is mysql-app　　
-Use image registry.access.redhat.com/rhscl/mysq|-57-rhel7　　
-Parameters to be used MYSQL_USER-user　　
-MYSQL_PASSWORD=password　　
-MYSQL_DATABASE=books　　
-All resources should have label "aap=mydbapp"　　
+Create an mysql application as instructed below  
+Name of the app is mysql-app  
+
+Use image registry.access.redhat.com/rhscl/mysq|-57-rhel7  
+
+Parameters to be  
+used MYSQL_USER-user  
+MYSQL_PASSWORD=password  
+MYSQL_DATABASE=books  
+All resources should have label "aap=mydbapp"  
 
 7
 
-Expose the service to url "mysaltestapptesturl.com"　　
-Copy file mytestfile. txt from host to the mysql application path /tmp/　　
-Check pod logs　　
-Login into application and check the version of mysq|　　
+Expose the service to url "mysaltestapptesturl.com"  
+Copy file mytestfile. txt from host to the mysql application path /tmp/  
+Check pod logs  
+Login into application and check the version of mysq|  
 
 8
 
-Create mysql application as instructed below　　
-Use mysql.son or mysql.yaml for application creation　　
-Variable to be set　　
-MYSQL_USER=user1　　
-MYSQL_PASSWORD=password　　
-MYSQL_DATABASE=books　　
+Create mysql application as instructed below  
+Use mysql.son or mysql.yaml for application creation　　  
+Variable to be set　　  
+MYSQL_USER=user1　　  
+MYSQL_PASSWORD=password　　  
+MYSQL_DATABASE=books　　  
 
 9
 
-Create Template from mysql. json or mysql. yaml file　　
-Create mysql application as instructed below　　
-	• ﻿Use the template created　　
-	• ﻿Variable to be set　　
-MYSQL_USER-user1　　
-MYSQL_PASSWORD=password　　
-MYSQL_DATABASE=books　　
+Create Template from mysql. json or mysql. yaml file　　  
+Create mysql application as instructed below　　  
+	• ﻿Use the template created　　  
+	• ﻿Variable to be set　　  
+MYSQL_USER-user1　　  
+MYSQL_PASSWORD=password　　  
+MYSQL_DATABASE=books　　  
 
