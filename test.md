@@ -50,7 +50,7 @@ MYSQL_DATABASE=books
 Create an mysql application as instructed below  
 Name of the app is mysql-app  
 
-Use image registry.access.redhat.com/rhscl/mysq|-57-rhel7  
+Use image registry.access.redhat.com/rhscl/mysql-57-rhel7  
 
 Parameters to be  
 used MYSQL_USER=user MYSQL_PASSWORD=password MYSQL_DATABASE=books  
