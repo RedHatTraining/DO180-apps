@@ -60,3 +60,5 @@ oc new-app --template=mysql-persistent -p MYSQL_USER=user1 -p MYSQL_PASSWORD=myp
 
 oc delete pods --all  
 oc delete pods mysql-1-xxxxx  
+# Create a new project with a display name and description
+oc new-project web-team-dev --display-name="Web Team Development" --description="Development project for the web team."
