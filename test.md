@@ -68,9 +68,7 @@ Login into application and check the version of mysq|
 Create mysql application as instructed below  
 Use mysql.son or mysql.yaml for application creation　　  
 Variable to be set　　  
-MYSQL_USER=user1　　  
-MYSQL_PASSWORD=password　　  
-MYSQL_DATABASE=books　　  
+MYSQL_USER=user1 MYSQL_PASSWORD=password MYSQL_DATABASE=books　　  
 
 9
 
@@ -78,7 +76,5 @@ Create Template from mysql. json or mysql. yaml file　　
 Create mysql application as instructed below　　  
 	• ﻿Use the template created　　  
 	• ﻿Variable to be set　　  
-MYSQL_USER-user1　　  
-MYSQL_PASSWORD=password　　  
-MYSQL_DATABASE=books　　  
+MYSQL_USER-user1 MYSQL_PASSWORD=password MYSQL_DATABASE=books　　  
 
