@@ -53,9 +53,7 @@ Name of the app is mysql-app
 Use image registry.access.redhat.com/rhscl/mysq|-57-rhel7  
 
 Parameters to be  
-used MYSQL_USER-user  
-MYSQL_PASSWORD=password  
-MYSQL_DATABASE=books  
+used MYSQL_USER=user MYSQL_PASSWORD=password MYSQL_DATABASE=books  
 All resources should have label "aap=mydbapp"  
 
 7
