@@ -1,3 +1,4 @@
+```
 # dockerfile to build image for JBoss EAP 6.4
 
 # start from rhel 7.2
@@ -39,7 +40,7 @@ RUN chown -R jboss:jboss /opt/jboss
 # JBoss ports
 
 # start JBoss
-
+```
 USER jboss
 
 CMD /bin/bash
