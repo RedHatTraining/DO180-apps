@@ -3,7 +3,7 @@
 Edit the Docker file in path /home/openshift ex180 practice/EX180 as instructed below and build an image with name iboss-eap  
 Copy the file /home/openshift_ex180 _ practice/jboss-eap-6.4.0 .zip from host to container image path /opt/jboss/. Unzip the copied file.  
 
-﻿﻿Set ENV for BOSS HOME to /opt/boss/jboss-eap-6.4  
+﻿﻿Set ENV for BOSS HOME to /opt/jboss/jboss-eap-6.4  
 ﻿﻿Create EAP user using $JBOSS_HOME/bin/add-user.sh admin admin@2016 --silent  
 ﻿﻿Expose ports 8080,9990 and 9999  
 ﻿﻿Start JBOSS using $JBOSS_HOME/bin/standalone.sh-c standalone-full-ha.xml  
