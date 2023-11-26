@@ -40,8 +40,8 @@ RUN chown -R jboss:jboss /opt/jboss
 # JBoss ports
 
 # start JBoss
-```
 USER jboss
 
 CMD /bin/bash
-                                                                                                                                            45,1         底端
+                                                                                                                                            45,1         底
+```
