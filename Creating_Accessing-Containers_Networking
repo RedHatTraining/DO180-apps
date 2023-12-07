@@ -1,0 +1,32 @@
+Lab 1 -- Creating Containers
+podman pull registry.access.redhat.com/ubi8/ubi-minimal:8.8
+podman images
+podman run registry.access.redhat.com/ubi8/ubi-minimal:8.8 echo 'Hello Red Hat'
+podman ps
+podman run -e GREET=Hello -e NAME='Red Hat' registry.access.redhat.com/ubi8/ubi-minimal:8.8 printenv GREET NAME
+podman run -d -p 8080:8080 registry.access.redhat.com/ubi8/httpd-24
+podman stop (id)
+podman ps -a
+podman rm (id)
+podman rmi (id)
+
+Lab 2 -- Container Networking
+podman network inspect podman
+podman network create cities
+podman network inspect cities
+podman run --name times-app --network cities -p 8080:8080 -d docker.io/tsrana1/podman-info-times:v0.1
+podman inspect times-app -f '{{.NetworkSettings.Networks.cities.IPAddress}}'
+podman run --rm --network cities registry.access.redhat.com/ubi8/ubi-minimal:8.5 curl -s http://IP_ADDRESS:8080/times/BKK
+podman run --rm --network cities registry.access.redhat.com/ubi8/ubi-minimal:8.5 curl -s http://times-app:8080/times/BKK
+podman run --name cities-app --network cities -p 8090:8090 -d -e TIMES_APP_URL=http://times-app:8080/times docker.io/tsrana1/podman-info-cities:v0.1
+curl http://localhost:8090/cities/MAD
+curl http://localhost:8090/cities/SAN
+
+Lab 3 -- Accessing Containers
+podman run --name nginx -d -p 8080:8080 docker.io/tsrana1/podman-nginx-helloworld
+podman cp nginx:/var/log/nginx/error.log error.log
+podman exec nginx ls /usr/share/nginx/html/public
+podman cp nginx:/etc/nginx/nginx.conf nginx.conf
+podman exec -it nginx bash
+vim /etc/nginx/nginx.conf
+podman exec nginx nginx -s reload
