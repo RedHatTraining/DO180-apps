@@ -1,0 +1,100 @@
+Script started on 2024-03-19 07:41:41-04:00
+
+This script configures the connection parameters to access the OpenShift cluster for your lab scripts
+
+ · Enter the API Endpoint: https://api.eu410r.prod.ole.redhat.com:6443
+ · Enter the Username: mamba73
+ · Enter the Password: lozinka060
+ · Enter the GitHub Account Name: mamba73
+ · Enter the Quay.io Account Name: mamba73
+
+You entered:
+ · API Endpoint:			https://api.eu410r.prod.ole.redhat.com:6443
+ · Username:				mamba73
+ · Password:				lozinka060
+ · GitHub Account Name:			mamba73
+ · Quay.io Account Name:		mamba73
+
+Generated config:
+ · API Endpoint:			https://api.eu410r.prod.ole.redhat.com:6443
+ · Wildcard Domain:			apps.eu410r.prod.ole.redhat.com
+ · Nexus Server Host:			nexus-common.apps.eu410r.prod.ole.redhat.com
+ · Username:				mamba73
+ · Password:				lozinka060
+ · GitHub Account Name:			mamba73
+ · Quay.io Account Name:		mamba73
+
+Verifying your API Endpoint...
+
+Verifying your Nexus host...
+
+Verifying your OpenShift developer user credentials...]777;notify;Command completed;exit]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ 
+]777;notify;Command completed;exit]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ This script configures the connection parameters to access the OpenShift ccluster for your lab scripts
+bash: This: command not found...
+]777;notify;Command completed;This script configures the connection parameters to access the OpenShift cluster for your lab scripts]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ 
+]777;notify;Command completed;This script configures the connection parameters to access the OpenShift cluster for your lab scripts]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Enter the API Endpoint: https://api.eu410r.prod.ole.redhat.com:6443
+bash: ·: command not found...
+]777;notify;Command completed;· Enter the API Endpoint: https://api.eu410r.prod.ole.redhat.com:6443]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Enter the Username: mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· Enter the Username: mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Enter the Password: lozinka060
+bash: ·: command not found...
+]777;notify;Command completed;· Enter the Password: lozinka060]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Enter the GitHub Account Name: mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· Enter the GitHub Account Name: mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Enter the Quay.io Account Name: mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· Enter the Quay.io Account Name: mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ 
+]777;notify;Command completed;· Enter the Quay.io Account Name: mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ You entered:
+bash: You: command not found...
+]777;notify;Command completed;You entered:]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · API Endpoint:https://api.eu410r.prod.ole.redhat.com:6443
+bash: ·: command not found...
+]777;notify;Command completed;· API Endpoint:https://api.eu410r.prod.ole.redhat.com:6443]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Username:mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· Username:mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Password:lozinka060
+bash: ·: command not found...
+]777;notify;Command completed;· Password:lozinka060]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · GitHub Account Name:mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· GitHub Account Name:mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Quay.io Account Name:mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· Quay.io Account Name:mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ 
+]777;notify;Command completed;· Quay.io Account Name:mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ Generated config:
+bash: Generated: command not found...
+]777;notify;Command completed;Generated config:]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · API Endpoint:https://api.eu410r.prod.ole.redhat.com:6443
+bash: ·: command not found...
+]777;notify;Command completed;· API Endpoint:https://api.eu410r.prod.ole.redhat.com:6443]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Wildcard Domain:apps.eu410r.prod.ole.redhat.com
+bash: ·: command not found...
+]777;notify;Command completed;· Wildcard Domain:apps.eu410r.prod.ole.redhat.com]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Nexus Server Host:nexus-common.apps.eu410r.prod.ole.redhat.com
+bash: ·: command not found...
+]777;notify;Command completed;· Nexus Server Host:nexus-common.apps.eu410r.prod.ole.redhat.com]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Username:mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· Username:mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Password:lozinka060
+bash: ·: command not found...
+]777;notify;Command completed;· Password:lozinka060]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · GitHub Account Name:mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· GitHub Account Name:mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$  · Quay.io Account Name:mamba73
+bash: ·: command not found...
+]777;notify;Command completed;· Quay.io Account Name:mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ 
+]777;notify;Command completed;· Quay.io Account Name:mamba73]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ Verifying your API Endpoint...
+bash: Verifying: command not found...
+]777;notify;Command completed;Verifying your API Endpoint...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ 
+]777;notify;Command completed;Verifying your API Endpoint...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ Verifying your Nexus host...
+bash: Verifying: command not found...
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ 
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ Verifying your OpenShift developer user credentials...^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ 1Verifying your Nexus host...^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;notify;Command completed;Verifying your Nexus host...]0;student@workstation:~/DO180-apps]7;file://workstation.lab.example.com/home/student/DO180-apps[student@workstation DO180-apps]$ ^C
+]777;
