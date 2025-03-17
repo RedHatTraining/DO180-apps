@@ -1,12 +1,25 @@
+const { Sequelize, DataTypes } = require('sequelize');
 
-module.exports.params = {
-    dbname: process.env.MYSQL_ENV_MYSQL_DATABASE,
-    username: process.env.MYSQL_ENV_MYSQL_USER,
-    password: process.env.MYSQL_ENV_MYSQL_PASSWORD,
-    params: {
-        host: "mysql",
-        port: "3306",
-        dialect: 'mysql'
-    }
-};
+const sequelize = new Sequelize(
+  process.env.DB_NAME || 'todoapp',
+  process.env.DB_USER || 'root',
+  process.env.DB_PASSWORD || 'password',
+  {
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 3306,
+    dialect: 'mysql'
+  }
+);
 
+const Item = sequelize.define('Item', {
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  done: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
+});
+
+module.exports = { sequelize, Item };

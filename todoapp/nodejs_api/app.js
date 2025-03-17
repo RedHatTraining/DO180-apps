@@ -1,35 +1,21 @@
-var restify = require('restify');
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const db = require('./models/db');
+const itemsController = require('./controllers/items');
+const serverInfoController = require('./controllers/serverinfo');
 
-var controller = require('./controllers/items');
-var serverinfo = require('./controllers/serverinfo');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-var db = require('./models/db');
-var model = require('./models/items');
+itemsController(app);
+serverInfoController(app);
 
-model.connect(db.params, function(err) {
-    if (err) throw err;
+const port = process.env.PORT || 8080;
+db.sequelize.sync().then(() => {
+  app.listen(port, () => {
+    console.log(`TodoApp listening on port ${port}`);
+  });
+}).catch(err => {
+  console.error('Database sync failed:', err);
 });
-
-var server = restify.createServer() 
-    .use(restify.fullResponse())
-    .use(restify.queryParser())
-    .use(restify.bodyParser())
-    .use(restify.CORS());
-    
-controller.context(server, '/todo/api', model); 
-serverinfo.context(server, '/todo/api'); 
-
-var port = process.env.PORT || 30080;
-server.listen(port, function (err) {
-    if (err)
-        console.error(err);
-    else
-        console.log('App is ready at : ' + port);
-});
- 
-if (process.env.environment == 'production')
-    process.on('uncaughtException', function (err) {
-        console.error(JSON.parse(JSON.stringify(err, ['stack', 'message', 'inner'], 2)))
-    });
-    
-

@@ -1,10 +1,15 @@
 {
-  "name": "todo",
-  "version": "0.0.1",
-  "private": true,
+  "name": "todoapp",
+  "version": "1.0.0",
+  "description": "Todo application with Node.js and MySQL for OpenShift",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
-    "restify": "4.0.3",
-    "sequelize": "3.14.2",
-    "mysql": "2.9.0"
+    "express": "^4.18.2",
+    "mysql2": "^3.9.4",
+    "sequelize": "^6.35.1",
+    "body-parser": "^1.20.2"
   }
 }
