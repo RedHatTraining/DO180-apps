@@ -1,0 +1,39 @@
+---
+- name: Prepare testcase file Playbook
+  hosts: "{{ target_host | default('controller') }}"
+  gather_facts: false
+  vars:
+    test_file_path: "{{ ansible_user_dir }}/tests"
+  vars_files:
+    - "{{ playbook_dir }}/testcases.yaml"
+  tasks:
+    - name: Get the log file name
+      ansible.builtin.shell: |
+        ls -t {{ log_dir | default('/home/stack) }}/tests/logs/*.log
+      register: logfile
+      changed_when: logfile.rc != 0
+      ignore_errors: true
+
+    - name: Prepare testcase file
+      when:
+        - logfile.rc == 0
+      block:
+        - name: Ensure the test result destination directory exists
+          ansible.builtin.file:
+            path: "{{ test_file_path }}"
+            state: directory
+
+        - name: Delete old testcase file if exists
+          ansible.builtin.file:
+            path: "{{ test_file_path }}/results.xml"
+            state: absent
+          ignore_errors: true
+
+        - name: Create the test result XML file
+          ansible.builtin.copy:
+            dest: "{{ test_file_path }}/results.xml"  
+            content: |
+              <testsuite>
+              </testsuite>   
+
+
