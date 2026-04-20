@@ -15,7 +15,7 @@ spec:
   ingress_tls_secret: awx-tls-secret
 
   # PostgreSQL Configuration
-  postgres_storage_class: standard
+  postgres_storage_class: local-path
   postgres_storage_requirements:
     requests:
       storage: 100Gi
@@ -30,7 +30,7 @@ spec:
   # Project Persistence
   projects_persistence: true
   projects_storage_size: 20Gi
-  projects_storage_class: standard
+  projects_storage_class: local-path
 
   # Web (UI/API) Resource Configuration
   web_replicas: 2
