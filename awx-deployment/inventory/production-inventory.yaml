@@ -1,0 +1,73 @@
+all:
+  vars:
+    ansible_user: deploy
+    ansible_ssh_private_key_file: /var/lib/awx/credentials/production_key
+    ansible_become: true
+    ansible_become_method: sudo
+
+  children:
+    webservers:
+      hosts:
+        web[01:30].yourdomain.com:
+      vars:
+        http_port: 80
+        https_port: 443
+
+    appservers:
+      hosts:
+        app[01:50].yourdomain.com:
+      vars:
+        app_port: 8080
+
+    databases:
+      hosts:
+        db[01:15].yourdomain.com:
+      vars:
+        db_port: 5432
+        backup_enabled: true
+
+    cache_servers:
+      hosts:
+        cache[01:10].yourdomain.com:
+      vars:
+        redis_port: 6379
+
+    monitoring:
+      hosts:
+        mon[01:05].yourdomain.com:
+      vars:
+        prometheus_port: 9090
+        grafana_port: 3000
+
+    loadbalancers:
+      hosts:
+        lb[01:05].yourdomain.com:
+      vars:
+        haproxy_stats_port: 8404
+
+    workers:
+      hosts:
+        worker[01:25].yourdomain.com:
+      vars:
+        worker_concurrency: 4
+
+    storage:
+      hosts:
+        storage[01:10].yourdomain.com:
+      vars:
+        nfs_export_path: /data/shared
+
+    # Logical groupings
+    production:
+      children:
+        webservers:
+        appservers:
+        databases:
+        cache_servers:
+        loadbalancers:
+
+    infrastructure:
+      children:
+        monitoring:
+        workers:
+        storage:
