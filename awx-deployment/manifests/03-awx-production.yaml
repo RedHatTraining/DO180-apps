@@ -1,0 +1,81 @@
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx-production
+  namespace: awx
+spec:
+  # Ingress Configuration
+  service_type: ClusterIP
+  ingress_type: Ingress
+  ingress_annotations: |
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  hostname: awx.yourdomain.com
+  ingress_tls_secret: awx-tls-secret
+
+  # PostgreSQL Configuration
+  postgres_storage_class: local-path
+  postgres_storage_requirements:
+    requests:
+      storage: 100Gi
+  postgres_resource_requirements:
+    requests:
+      cpu: "1"
+      memory: "2Gi"
+    limits:
+      cpu: "2"
+      memory: "4Gi"
+
+  # Project Persistence
+  projects_persistence: true
+  projects_storage_size: 20Gi
+  projects_storage_class: local-path
+
+  # Web (UI/API) Resource Configuration
+  web_replicas: 2
+  web_resource_requirements:
+    requests:
+      cpu: "1"
+      memory: "2Gi"
+    limits:
+      cpu: "2"
+      memory: "4Gi"
+
+  # Task Runner Resource Configuration (runs playbooks)
+  task_replicas: 2
+  task_resource_requirements:
+    requests:
+      cpu: "2"
+      memory: "4Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+
+  # Redis Configuration
+  redis_resource_requirements:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+
+  # Security Settings
+  security_context_settings:
+    runAsGroup: 0
+    runAsUser: 0
+    fsGroup: 0
+
+  # Extra Settings (LDAP, session, etc.)
+  extra_settings:
+    - setting: SESSION_COOKIE_SECURE
+      value: "True"
+    - setting: CSRF_COOKIE_SECURE
+      value: "True"
+    - setting: SOCIAL_AUTH_REDIRECT_IS_HTTPS
+      value: "True"
+    - setting: SESSIONS_PER_USER
+      value: "3"
+    - setting: AUTH_TOKEN_EXPIRATION
+      value: "1800"

@@ -1,0 +1,40 @@
+---
+# Global variables for all 150 servers
+
+# NTP Configuration
+ntp_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+
+# DNS Configuration
+dns_servers:
+  - 8.8.8.8
+  - 8.8.4.4
+
+# Security Baseline
+security_ssh_permit_root_login: "no"
+security_ssh_password_authentication: "no"
+security_ssh_port: 22
+security_fail2ban_enabled: true
+
+# Monitoring Agent
+monitoring_agent: node_exporter
+monitoring_agent_port: 9100
+
+# Log Forwarding
+syslog_server: mon01.yourdomain.com
+syslog_port: 514
+
+# Common Packages
+common_packages:
+  - vim
+  - htop
+  - curl
+  - wget
+  - net-tools
+  - python3
+  - chrony
+
+# Firewall
+firewall_enabled: true
+firewall_default_policy: deny
