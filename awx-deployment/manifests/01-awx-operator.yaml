@@ -40,9 +40,14 @@ spec:
           image: quay.io/ansible/awx-operator:latest
           args:
             - --leader-elect
+            - --leader-election-id=awx-operator
           env:
             - name: ANSIBLE_GATHERING
               value: explicit
+            - name: ANSIBLE_OPERATOR_LEADER_ELECTION_ENABLED
+              value: "true"
+            - name: ANSIBLE_OPERATOR_LEADER_ELECTION_ID
+              value: "awx-operator"
           resources:
             limits:
               cpu: 500m
